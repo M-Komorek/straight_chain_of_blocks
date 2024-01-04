@@ -3,14 +3,14 @@ use blake2::{Blake2b512, Digest};
 use super::transactions::Transaction;
 
 #[derive(Debug)]
-pub struct Block<'a> {
+pub struct Block {
     hash: Option<Vec<u8>>,
     prev_hash: Option<Vec<u8>>,
-    transactions: Vec<Transaction<'a>>,
+    transactions: Vec<Transaction>,
 }
 
-impl<'a> Block<'a> {
-    pub fn new(prev_hash: Option<Vec<u8>>) -> Block<'a> {
+impl Block {
+    pub fn new(prev_hash: Option<Vec<u8>>) -> Block {
         Block {
             hash: None,
             prev_hash,
@@ -22,15 +22,19 @@ impl<'a> Block<'a> {
         &self.hash
     }
 
+    pub fn get_prev_hash(&self) -> &Option<Vec<u8>> {
+        &self.prev_hash
+    }
+
     pub fn get_transaction_count(&self) -> usize {
         self.transactions.len()
     }
 
-    pub fn get_transactions(&self) -> &Vec<Transaction<'a>> {
+    pub fn get_transactions(&self) -> &Vec<Transaction> {
         &self.transactions
     }
 
-    pub fn append_transaction(&mut self, transaction: Transaction<'a>) {
+    pub fn append_transaction(&mut self, transaction: Transaction) {
         self.transactions.push(transaction);
         self.update_hash();
     }
@@ -95,7 +99,7 @@ mod tests {
         let transaction = Transaction::new(
             Uuid::new_v4(),
             TransactionVariant::CreateUserAccount {
-                account_name: "account",
+                account_name: String::from("account"),
             },
         );
         block.append_transaction(transaction);
@@ -110,7 +114,7 @@ mod tests {
         let transaction = Transaction::new(
             Uuid::new_v4(),
             TransactionVariant::CreateUserAccount {
-                account_name: "account",
+                account_name: String::from("account"),
             },
         );
         block.append_transaction(transaction);
@@ -124,7 +128,7 @@ mod tests {
         let transaction = Transaction::new(
             Uuid::new_v4(),
             TransactionVariant::CreateUserAccount {
-                account_name: "account",
+                account_name: String::from("account"),
             },
         );
         block.append_transaction(transaction);
@@ -142,7 +146,7 @@ mod tests {
         let transaction = Transaction::new(
             Uuid::new_v4(),
             TransactionVariant::CreateUserAccount {
-                account_name: "account",
+                account_name: String::from("account"),
             },
         );
         block.append_transaction(transaction);
